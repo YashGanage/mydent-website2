@@ -191,26 +191,41 @@ export default function App() {
           <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-200/40 rounded-full blur-3xl"></div>
           <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-300/30 rounded-full blur-3xl"></div>
         </div>
-        <div className="container mx-auto max-w-7xl">
-          <div className="max-w-3xl space-y-8 relative z-10">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100/80 text-blue-800 text-sm font-semibold border border-blue-200">
-              <Star className="w-4 h-4 fill-blue-600 text-blue-600" />
-              <span>5.0 Rated · 280+ Happy Patients</span>
+        <div className="container mx-auto max-w-7xl px-4 lg:px-8">
+          <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+            <div className="lg:w-3/5 space-y-8 relative z-10">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100/80 text-blue-800 text-sm font-semibold border border-blue-200">
+                <Star className="w-4 h-4 fill-blue-600 text-blue-600" />
+                <span>5.0 Rated · 280+ Happy Patients</span>
+              </div>
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold text-slate-900 leading-tight tracking-tight">
+                Gentle, Expert <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-400">Dental Care</span><br />For Your Entire Family.
+              </h1>
+              <p className="text-lg md:text-xl text-slate-600 max-w-2xl leading-relaxed">
+                Experience pain-free treatments in a comfortable and tech-forward environment. We prioritize your smile and your comfort above all else.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                <Button onClick={() => scrollTo('contact')} size="lg" className="bg-blue-600 hover:bg-blue-700 text-white text-lg rounded-full px-8 py-6 h-auto shadow-lg shadow-blue-600/20">
+                  Book Appointment
+                </Button>
+                <Button onClick={() => window.open(`tel:+${CLINIC_WHATSAPP_NUMBER}`, '_self')} variant="outline" size="lg" className="bg-white border-2 border-slate-200 text-slate-700 text-lg rounded-full px-8 py-6 h-auto hover:bg-slate-50 flex items-center gap-2">
+                  <Phone className="w-5 h-5" />
+                  Call Now
+                </Button>
+              </div>
             </div>
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold text-slate-900 leading-tight tracking-tight">
-              Gentle, Expert <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-400">Dental Care</span><br />For Your Entire Family.
-            </h1>
-            <p className="text-lg md:text-xl text-slate-600 max-w-2xl leading-relaxed">
-              Experience pain-free treatments in a comfortable and tech-forward environment. We prioritize your smile and your comfort above all else.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <Button onClick={() => scrollTo('contact')} size="lg" className="bg-blue-600 hover:bg-blue-700 text-white text-lg rounded-full px-8 py-6 h-auto shadow-lg shadow-blue-600/20">
-                Book Appointment
-              </Button>
-              <Button onClick={() => window.open(`tel:+${CLINIC_WHATSAPP_NUMBER}`, '_self')} variant="outline" size="lg" className="bg-white border-2 border-slate-200 text-slate-700 text-lg rounded-full px-8 py-6 h-auto hover:bg-slate-50 flex items-center gap-2">
-                <Phone className="w-5 h-5" />
-                Call Now
-              </Button>
+            
+            <div className="lg:w-2/5 relative animate-in fade-in slide-in-from-right-10 duration-1000">
+              <div className="relative z-10 rounded-3xl overflow-hidden border-8 border-white shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-500">
+                <img 
+                  src="/doctor-hero.jpg" 
+                  alt="Professional Dental Care" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              {/* Decorative elements */}
+              <div className="absolute -top-6 -right-6 w-24 h-24 bg-blue-600/10 rounded-full blur-2xl"></div>
+              <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-blue-400/20 rounded-full blur-3xl"></div>
             </div>
           </div>
         </div>
@@ -356,6 +371,20 @@ export default function App() {
                     <h4 className="text-xl font-bold text-white">Opening Hours</h4>
                     <p className="mt-1">Mon - Sat: 10:00 AM - 10:00 PM<br />Sunday: Closed</p>
                   </div>
+                </div>
+
+                {/* Map Integration */}
+                <div className="mt-8 rounded-2xl overflow-hidden border border-slate-800 shadow-lg h-60 w-full group">
+                  <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3780.8441113063533!2d73.7844002!3d18.626249!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2b9be13807d9d%3A0x6e9fcd86558668d2!2sSai%20Plaza%20Building!5e0!3m2!1sen!2sin!4v1711822800000!5m2!1sen!2sin" 
+                    width="100%" 
+                    height="100%" 
+                    style={{ border: 0 }} 
+                    allowFullScreen="" 
+                    loading="lazy" 
+                    referrerPolicy="no-referrer-when-downgrade"
+                    className="grayscale group-hover:grayscale-0 transition-all duration-500"
+                  />
                 </div>
               </div>
             </div>
