@@ -69,9 +69,9 @@ export default function App() {
     try {
       const currentDate = new Date();
       // Formatting time and date beautifully
-      const formattedDate = currentDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }); // e.g., 30 Mar 2026
-      const formattedTime = currentDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }); // e.g., 04:30 PM
-      const formattedDay = currentDate.toLocaleDateString('en-US', { weekday: 'long' }); // e.g., Monday
+      const submittedDate = currentDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+      const submittedTime = currentDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+      const submittedDay = currentDate.toLocaleDateString('en-US', { weekday: 'long' });
 
       // By using 'text/plain', we bypass the CORS OPTIONS preflight request that Google blocks.
       await fetch(GOOGLE_APP_SCRIPT_URL, {
@@ -79,9 +79,9 @@ export default function App() {
         headers: { "Content-Type": "text/plain;charset=utf-8" },
         body: JSON.stringify({ 
           ...data, 
-          date: formattedDate,
-          time: formattedTime,
-          day: formattedDay
+          submittedDate: submittedDate,
+          submittedTime: submittedTime,
+          submittedDay: submittedDay
         })
       });
       return true;
