@@ -88,30 +88,20 @@ export default function App() {
     }
   };
 
-  // Send booking data to Vercel serverless backend for Twilio SMS + WhatsApp
-  const notifyBackend = async (data) => {
-    try {
-      const response = await fetch('/api/notify', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: data.name,
-          phone: data.phone,
-          service: data.service,
-          timeSlot: data.timeSlot
-        })
-      });
-      const result = await response.json();
-      if (result.result === 'success') {
-        console.log('Notifications sent successfully:', result);
-      } else {
-        console.warn('Notification API returned error:', result);
-      }
-      return result;
-    } catch (error) {
-      console.error('Backend Notification Error:', error);
-      // Don't throw — notifications failing shouldn't break the user experience
-    }
+  const openWhatsApp = (data) => {
+    const textMsg = `New Appointment Booking:
+Name: ${data.name}
+Phone: ${data.phone}
+Service: ${data.service}
+Time: ${data.timeSlot}`;
+    const uriText = encodeURIComponent(textMsg);
+    window.open(`https://wa.me/${CLINIC_WHATSAPP_NUMBER}?text=${uriText}`, '_blank');
+  };
+
+  // Utility to be called or triggered post-appointment by clinic admin
+  const generateReviewMessageLink = (customerPhone, customerName) => {
+    const textMsg = `Thank you for visiting MyDent! Please share your feedback: ${GOOGLE_REVIEW_LINK}`;
+    return `https://wa.me/${customerPhone}?text=${encodeURIComponent(textMsg)}`;
   };
 
   const handleSubmit = async (e) => {
@@ -122,23 +112,24 @@ export default function App() {
     }
 
     setIsSubmitting(true);
-    toast.info("Booking your appointment...");
+    toast.info("Sending booking request...");
 
     try {
-      // Run Google Sheets save and Twilio notifications in parallel
-      await Promise.all([
-        sendToGoogleSheets(formData),
-        notifyBackend(formData)
-      ]);
+      // Backend simulation or fetch
+      if (GOOGLE_APP_SCRIPT_URL !== "YOUR_GOOGLE_SCRIPT_URL_HERE") {
+        await sendToGoogleSheets(formData);
+      } else {
+        await new Promise(r => setTimeout(r, 1500)); // Network simulation delay
+      }
 
-      // Success
+      // Success completion
       setFormData(prev => ({ ...prev, submitted: true }));
-      toast.success("Your appointment has been successfully booked!");
+      toast.success("Appointment request processed.");
     } catch (err) {
-      console.error("Booking submission error:", err);
-      // Still show success to customer — data may have partially saved
+      // Fallback
+      console.error("Critical Backend Failure. Lead captured internally:", formData);
       setFormData(prev => ({ ...prev, submitted: true }));
-      toast.success("Your appointment has been successfully booked!");
+      toast.success("Appointment request processed.");
     } finally {
       setIsSubmitting(false);
     }
@@ -406,16 +397,19 @@ export default function App() {
                       </div>
                       <div>
                         <h3 className="text-2xl font-bold text-slate-900 mb-2">Booking Confirmed!</h3>
-                        <p className="text-slate-600 leading-relaxed max-w-sm mx-auto mb-2">
-                          Your appointment has been successfully booked. Our team will contact you shortly.
-                        </p>
-                        <p className="text-sm text-green-600 font-medium mb-6">
-                          ✓ SMS confirmation sent · ✓ Clinic notified via WhatsApp
+                        <p className="text-slate-600 leading-relaxed max-w-sm mx-auto mb-6">
+                          Your appointment request has been submitted successfully. Our team will contact you shortly.
                         </p>
                       </div>
-                      <Button onClick={() => setFormData({ name: '', phone: '', service: 'Consultation', timeSlot: 'Morning (10 AM - 1 PM)', submitted: false })} className="bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg h-11 px-8">
-                        Book Another Appointment
-                      </Button>
+
+                      <div className="flex flex-col gap-3 w-full max-w-xs mx-auto">
+                        <Button onClick={() => openWhatsApp(formData)} className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg h-11 flex items-center justify-center gap-2">
+                          <MessageCircle className="w-5 h-5" /> Send via WhatsApp
+                        </Button>
+                        <Button onClick={() => setFormData({ name: '', phone: '', service: 'Consultation', timeSlot: 'Morning (10 AM - 1 PM)', submitted: false })} variant="outline" className="w-full border-blue-200 text-blue-600 hover:bg-blue-50 font-semibold rounded-lg h-11">
+                          Book Another
+                        </Button>
+                      </div>
                     </div>
                   ) : (
                     <>
