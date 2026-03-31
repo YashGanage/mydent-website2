@@ -17,8 +17,11 @@ export default function App() {
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
-    service: 'Consultation',
-    timeSlot: 'Morning (10 AM - 1 PM)'
+    email: '',
+    date: '',
+    service: '',
+    timeSlot: '',
+    message: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -92,8 +95,11 @@ export default function App() {
     const textMsg = `New Appointment Booking:
 Name: ${data.name}
 Phone: ${data.phone}
+Email: ${data.email || 'N/A'}
 Service: ${data.service}
-Time: ${data.timeSlot}`;
+Date: ${data.date}
+Time: ${data.timeSlot}
+Message: ${data.message || 'N/A'}`;
     const uriText = encodeURIComponent(textMsg);
     window.open(`https://wa.me/${CLINIC_WHATSAPP_NUMBER}?text=${uriText}`, '_blank');
   };
@@ -413,67 +419,60 @@ Time: ${data.timeSlot}`;
                     </div>
                   ) : (
                     <>
-                      <h3 className="text-2xl font-bold text-slate-900 mb-6">Quick Appointment</h3>
-                      <form className="space-y-5" onSubmit={handleSubmit}>
-                        <div className="space-y-2">
-                          <label className="text-sm font-semibold text-slate-700">Full Name</label>
-                          <input
-                            name="name"
-                            value={formData.name}
-                            onChange={handleChange}
-                            type="text"
-                            className="w-full flex h-12 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2"
-                            placeholder="Jane Doe"
-                            required
-                          />
+                      <h3 className="text-2xl font-bold text-slate-900 mb-6 border-b border-slate-100 pb-4">Book Your Appointment Online</h3>
+                      <form className="space-y-4" onSubmit={handleSubmit}>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="space-y-1.5">
+                            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Full Name</label>
+                            <input name="name" value={formData.name} onChange={handleChange} type="text" className="w-full flex h-11 rounded-md border border-slate-200 bg-slate-50/50 px-3 py-2 text-sm placeholder:text-slate-400 focus-visible:outline-none focus:bg-white focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all" placeholder="John Doe" required />
+                          </div>
+                          <div className="space-y-1.5">
+                            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Contact No.</label>
+                            <input name="phone" value={formData.phone} onChange={handleChange} type="tel" className="w-full flex h-11 rounded-md border border-slate-200 bg-slate-50/50 px-3 py-2 text-sm placeholder:text-slate-400 focus-visible:outline-none focus:bg-white focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all" placeholder="+91 XXXXX XXXXX" required />
+                          </div>
                         </div>
 
-                        <div className="flex flex-col sm:flex-row gap-5">
-                          <div className="space-y-2 flex-1">
-                            <label className="text-sm font-semibold text-slate-700">Phone Number</label>
-                            <input
-                              name="phone"
-                              value={formData.phone}
-                              onChange={handleChange}
-                              type="tel"
-                              className="w-full flex h-12 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2"
-                              placeholder="+91 XXXXX XXXXX"
-                              required
-                            />
-                          </div>
+                        <div className="space-y-1.5">
+                          <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Email Address</label>
+                          <input name="email" value={formData.email} onChange={handleChange} type="email" className="w-full flex h-11 rounded-md border border-slate-200 bg-slate-50/50 px-3 py-2 text-sm placeholder:text-slate-400 focus-visible:outline-none focus:bg-white focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all" placeholder="john@example.com" />
+                        </div>
 
-                          <div className="space-y-2 flex-1">
-                            <label className="text-sm font-semibold text-slate-700">Time Slot</label>
-                            <select
-                              name="timeSlot"
-                              value={formData.timeSlot}
-                              onChange={handleChange}
-                              className="w-full flex h-12 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2">
-                              <option>Morning (10 AM - 1 PM)</option>
-                              <option>Afternoon (1 PM - 5 PM)</option>
-                              <option>Evening (5 PM - 10 PM)</option>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="space-y-1.5">
+                            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Preferred Date</label>
+                            <input name="date" value={formData.date} onChange={handleChange} type="date" className="w-full flex h-11 rounded-md border border-slate-200 bg-slate-50/50 px-3 py-2 text-sm text-slate-700 focus-visible:outline-none focus:bg-white focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all" required />
+                          </div>
+                          <div className="space-y-1.5">
+                            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Time Slot</label>
+                            <select name="timeSlot" value={formData.timeSlot} onChange={handleChange} className="w-full flex h-11 rounded-md border border-slate-200 bg-slate-50/50 px-3 py-2 text-sm text-slate-700 outline-none focus:bg-white focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all" required>
+                              <option value="" disabled hidden>Select Time Slot</option>
+                              <option value="Morning (10 AM - 1 PM)">Morning (10 AM - 1 PM)</option>
+                              <option value="Afternoon (1 PM - 5 PM)">Afternoon (1 PM - 5 PM)</option>
+                              <option value="Evening (5 PM - 10 PM)">Evening (5 PM - 10 PM)</option>
                             </select>
                           </div>
                         </div>
 
-                        <div className="space-y-2">
-                          <label className="text-sm font-semibold text-slate-700">Interested Service</label>
-                          <select
-                            name="service"
-                            value={formData.service}
-                            onChange={handleChange}
-                            className="w-full flex h-12 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2">
-                            <option>Consultation</option>
-                            <option>Root Canal Treatment</option>
-                            <option>Tooth Extraction</option>
-                            <option>Cleaning</option>
-                            <option>Dental Fillings</option>
-                            <option>Other</option>
+                        <div className="space-y-1.5">
+                          <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Select Service</label>
+                          <select name="service" value={formData.service} onChange={handleChange} className="w-full flex h-11 rounded-md border border-slate-200 bg-slate-50/50 px-3 py-2 text-sm text-slate-700 outline-none focus:bg-white focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all" required>
+                            <option value="" disabled hidden>Select Service</option>
+                            <option value="Consultation">Consultation</option>
+                            <option value="Root Canal Treatment">Root Canal Treatment</option>
+                            <option value="Tooth Extraction">Tooth Extraction</option>
+                            <option value="Cleaning">Cleaning</option>
+                            <option value="Dental Fillings">Dental Fillings</option>
+                            <option value="Other">Other</option>
                           </select>
                         </div>
 
-                        <Button type="submit" size="lg" disabled={isSubmitting} className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-lg rounded-lg disabled:opacity-70">
-                          Submit Request
+                        <div className="space-y-1.5">
+                          <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Dental Problem / Your Message</label>
+                          <textarea name="message" value={formData.message} onChange={handleChange} rows="3" className="w-full flex rounded-md border border-slate-200 bg-slate-50/50 px-3 py-2 text-sm placeholder:text-slate-400 focus-visible:outline-none focus:bg-white focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all resize-none" placeholder="Briefly describe your dental issue or symptoms..." />
+                        </div>
+
+                        <Button type="submit" size="lg" disabled={isSubmitting} className="w-full h-12 mt-4 bg-[#69bf2a] hover:bg-[#58a023] text-white font-bold tracking-wide text-[15px] rounded-md shadow-lg shadow-green-500/20 disabled:opacity-70 transition-all uppercase">
+                          Book An Appointment
                         </Button>
                       </form>
                     </>
